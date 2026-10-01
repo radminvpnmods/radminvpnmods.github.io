@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний и Поддержка Radmin VPN</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0b0f17',
+                            card: '#161f2c',
+                            cardHover: '#1e2a3b',
+                            border: '#2a384c',
+                            cyan: '#00d2ff',
+                            blue: '#0088ff',
+                            cyanGlow: 'rgba(0, 210, 255, 0.15)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f17;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .cyan-glow {
+            box-shadow: 0 0 25px -5px rgba(0, 210, 255, 0.25);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #00d2ff 0%, #0088ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-cyan selection:text-black">
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-brand-dark/90 backdrop-blur-md border-b border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-brand-cyan flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-brand-cyan/20">
+                    <i class="fa-solid font-bold fa-network-wired text-white"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight text-white">Radmin VPN</span>
+                    <span class="text-xs text-brand-cyan font-medium block -mt-1">Центр поддержки</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#topics" class="hover:text-brand-cyan transition">Популярные темы</a>
+                <a href="#troubleshooting" class="hover:text-brand-cyan transition">Решение проблем</a>
+                <a href="#faq" class="hover:text-brand-cyan transition">Частые вопросы</a>
+            </nav>
+
+            <a href="#download" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-semibold hover:opacity-90 transition shadow-lg shadow-brand-cyan/20 flex items-center gap-2">
+                <i class="fa-solid fa-download text-sm"></i>
+                <span>Скачать бесплатно</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative py-16 lg:py-24 overflow-hidden border-b border-brand-border/40">
+            <!-- Background Glow Effect -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-cyan/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+            <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-xs font-semibold text-brand-cyan mb-6">
+                    <span class="flex h-2 w-2 rounded-full bg-brand-cyan animate-ping"></span>
+                    Справочный центр и официальное руководство
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
+                    Справка и Поддержка <span class="text-gradient">Radmin VPN</span>
+                </h1>
+
+                <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Быстрая помощь по настройке виртуальных локальных сетей для мультиплеера, совместной работы и удаленного доступа к ПК.
+                </p>
+
+                <!-- Search Input Box -->
+                <div class="relative max-w-2xl mx-auto mb-6">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-5 text-gray-400 text-lg"></i>
+                        <input type="text" id="searchInput" onkeyup="filterArticles()" 
+                            placeholder="Введите ваш вопрос (например: 'Minecraft', 'Желтый кружок', 'Пинг')..."
+                            class="w-full pl-14 pr-12 py-4 rounded-2xl bg-brand-card border border-brand-border text-white placeholder-gray-500 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition shadow-2xl text-base">
+                        <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-4 text-gray-400 hover:text-white p-2">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2 text-xs text-gray-400">
+                    <span class="font-medium text-gray-500">Часто ищут:</span>
+                    <button onclick="setSearch('Желтый кружок')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Желтый кружок</button>
+                    <button onclick="setSearch('Minecraft')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Minecraft</button>
+                    <button onclick="setSearch('Брандмауэр')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Брандмауэр</button>
+                    <button onclick="setSearch('Создание сети')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Создать сеть</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="topics" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Популярные категории и инструкции</h2>
+                    <p class="text-gray-400 text-sm mt-1">Выберите нужный раздел для решения вашей задачи</p>
+                </div>
+                <span id="resultsCount" class="hidden text-xs bg-brand-card px-3 py-1.5 rounded-full border border-brand-border text-brand-cyan font-mono"></span>
+            </div>
+
+            <!-- Grid of Knowledge Base Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cardsGrid">
+                
+                <!-- Card 1 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="создать сеть подключиться пригласить друзей пароль имя логин">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-brand-cyan flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users-rays"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Создание и подключение к сети</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Пошаговое руководство по созданию приватной VPN-комнаты, установке пароля и приглашению друзей.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать инструкцию <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="игры minecraft palworld gta stardew valley локальная сеть мультиплеер пинг сервер">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Игры по локальной сети</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Инструкции по настройке подключения для Minecraft, Palworld, Terraria, GTA V, Stardew Valley и других игр.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Посмотреть список игр <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="желтый круг красный восклицательный знак ошибка нет связи не работает ретрансляция прямой соединение">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Желтый / Красный статус</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Как исправить косвенное подключение (через ретранслятор), высокий пинг или отсутствие связи с участником.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Решение проблемы <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="брандмауэр антивирус фаервол правила исключения порта доступ блокировка windows defender">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Брандмауэр и Безопасность</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Добавление Radmin VPN и игр в исключения Windows Defender, антивирусов и сетевого экрана.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Настроить защиту <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="удаленный рабочий стол radmin server radmin viewer управление пк файл сервер передача файлов">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-desktop"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Удаленный доступ и Radmin 3</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Подключение к удаленному рабочему столу, использование Radmin Viewer и передача файлов по сети.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Инструкция по доступу <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group cursor-pointer" data-keywords="сетевой адаптер драйвер переустановка виртуальная сеть метрика ip адрес 26.0.0.0">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-brand-cyan flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Сетевые адаптеры и IP</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Настройка приоритета адаптера Radmin VPN (подсеть 26.x.x.x), переустановка виртуальных драйверов.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Настройка адаптера <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- No search results placeholder -->
+            <div id="noResults" class="hidden text-center py-12">
+                <i class="fa-solid fa-magnifying-glass-triangle text-4xl text-gray-600 mb-3 block"></i>
+                <h3 class="text-xl font-semibold text-white">Ничего не найдено</h3>
+                <p class="text-gray-400 text-sm mt-1">Попробуйте изменить поисковый запрос или выберите тему из списка ниже.</p>
+            </div>
+        </section>
+
+        <section id="troubleshooting" class="py-16 bg-brand-card/30 border-y border-brand-border/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-white tracking-tight">Пошаговый мастер решения проблем</h2>
+                    <p class="text-gray-400 text-sm mt-2">Если соединение не работает, выполните эти 4 базовых шага по порядку</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Step 1 -->
+                    <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-extrabold text-brand-cyan/40">01</span>
+                                <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-plug"></i></span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Проверка статуса</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Убедитесь, что кнопка включения в программе горит зеленым, а вам присвоен IP-адрес формата <code class="text-brand-cyan bg-brand-dark px-1.5 py-0.5 rounded text-xs">26.x.x.x</code>.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-gray-500">
+                            Проверьте интернет-соединение
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-extrabold text-brand-cyan/40">02</span>
+                                <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-rotate-right"></i></span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Перезапуск службы</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Откройте Диспетчер задач, найдите службу <code class="text-brand-cyan bg-brand-dark px-1.5 py-0.5 rounded text-xs">Radmin VPN Service</code> и нажмите «Перезапустить».
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-gray-500">
+                            Сбрасывает зависшие сессии
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-extrabold text-brand-cyan/40">03</span>
+                                <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-shield-virus"></i></span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Отключение фаервола</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Временно отключите Брандмауэр Windows для общественной сети, чтобы проверить, блокирует ли он трафик игры.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-gray-500">
+                            Самая частая причина блокировки
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-extrabold text-brand-cyan/40">04</span>
+                                <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-network-wired"></i></span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Пинг через Radmin</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Нажмите правой кнопкой на имя друга в списке и выберите «Пинг». Ответ должен быть без потерь пакетов.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-gray-500">
+                            Проверка прямого канала
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white tracking-tight">Часто задаваемые вопросы (FAQ)</h2>
+                <p class="text-gray-400 text-sm mt-2">Ответы на самые популярные вопросы пользователей</p>
+            </div>
+
+            <div class="space-y-4">
+                
+                <!-- FAQ Item 1 -->
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden transition-colors">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Безопасно ли использовать Radmin VPN?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Да, Radmin VPN абсолютно безопасен. Трафик защищается надежным шифрованием (AES-256 bit), что предотвращает перехват данных. Программа не собирает персональную информацию и не отслеживает вашу активность в сети.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden transition-colors">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Сколько устройств можно подключить к одной сети?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            В одну виртуальную сеть Radmin VPN можно бесплатно подключить <strong>до 150+ устройств</strong> без ограничения скорости. Это делает программу отличным решением для крупных игровых серверов или объединения офисных компьютеров.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden transition-colors">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Почему высокий пинг в играх и как его снизить?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Высокий пинг или "желтый кружок" означают, что прямое P2P-подключение не удалось установить, и трафик идет через ретрансляционный сервер.
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li>Убедитесь, что у всех игроков Брандмауэр Windows настроен правильно.</li>
+                                <li>Отключите сторонние VPN и прокси-сервисы.</li>
+                                <li>Попробуйте перезапустить роутер и службу Radmin VPN.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden transition-colors">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Что делать, если друзья не видят созданный сервер Minecraft/GTA?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Хост игры должен скопировать свой IP из Radmin VPN (например, <code class="text-brand-cyan bg-brand-dark px-1 rounded">26.12.34.56</code>) и передать его друзьям. Друзья должны подключаться по этому IP с указанием порта (например, <code class="text-brand-cyan bg-brand-dark px-1 rounded">26.12.34.56:25565</code>). Если сервер все еще не виден, хосту необходимо добавить порт игры в правила входящих подключений Брандмауэра.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="download" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-r from-brand-card via-[#121a26] to-brand-card border border-brand-border rounded-3xl p-8 sm:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 cyan-glow">
+                
+                <div class="max-w-xl text-center lg:text-left">
+                    <h2 class="text-3xl font-extrabold text-white mb-4">Готовы настроить безопасную сеть?</h2>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                        Скачайте официальную последнюю версию Radmin VPN бесплатно. Полная поддержка Windows 10/11, отсутствие рекламы и простая настройка за 1 минуту.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <a href="https://www.radmin-vpn.com" target="_blank" class="px-6 py-3 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-bold hover:opacity-90 transition shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Скачать Radmin VPN</span>
+                        </a>
+                        <a href="https://discord.gg" target="_blank" class="px-6 py-3 rounded-xl bg-brand-dark border border-brand-border text-white font-semibold hover:border-brand-cyan transition flex items-center gap-2">
+                            <i class="fa-brands fa-discord text-indigo-400"></i>
+                            <span>Сообщество Discord</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                    <div class="bg-brand-dark/80 p-5 rounded-2xl border border-brand-border/60 text-center min-w-[160px]">
+                        <i class="fa-solid fa-bolt text-brand-cyan text-2xl mb-2"></i>
+                        <div class="text-lg font-bold text-white">До 100 Мбит/с</div>
+                        <div class="text-xs text-gray-400">Скорость соединения</div>
+                    </div>
+                    <div class="bg-brand-dark/80 p-5 rounded-2xl border border-brand-border/60 text-center min-w-[160px]">
+                        <i class="fa-solid fa-lock text-brand-cyan text-2xl mb-2"></i>
+                        <div class="text-lg font-bold text-white">AES-256</div>
+                        <div class="text-xs text-gray-400">Шифрование данных</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark border-t border-brand-border/50 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 flex items-center justify-center text-brand-cyan font-bold text-sm">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-white">Radmin VPN Справка</span>
+                </div>
+
+                <p class="text-xs text-gray-500 text-center max-w-md">
+                    Неофициальный информационный справочный портал. Все товарные знаки и названия программ принадлежат их законным владельцам (Famatech).
+                </p>
+
+                <div class="flex space-x-6 text-xs text-gray-400">
+                    <a href="#topics" class="hover:text-brand-cyan transition">Темы</a>
+                    <a href="#troubleshooting" class="hover:text-brand-cyan transition">Диагностика</a>
+                    <a href="#faq" class="hover:text-brand-cyan transition">FAQ</a>
+                </div>
+
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-brand-border/30 text-center text-xs text-gray-600">
+                &copy; 2026 Центр справочной информации Radmin VPN. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive search filter logic
+        function filterArticles() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.topic-card');
+            const clearBtn = document.getElementById('clearSearch');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('resultsCount');
+
+            let visibleCount = 0;
+
+            // Toggle clear button
+            if (filter.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+
+                if (keywords.includes(filter) || title.includes(filter) || desc.includes(filter)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Handle no results state
+            if (visibleCount === 0 && filter !== '') {
+                noResults.classList.remove('hidden');
+                resultsCount.classList.add('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                if (filter !== '') {
+                    resultsCount.classList.remove('hidden');
+                    resultsCount.textContent = `Найдено: ${visibleCount}`;
+                } else {
+                    resultsCount.classList.add('hidden');
+                }
+            }
+        }
+
+        // Quick button search handler
+        function setSearch(keyword) {
+            const input = document.getElementById('searchInput');
+            input.value = keyword;
+            filterArticles();
+            input.focus();
+        }
+
+        // Clear search input
+        function clearSearchInput() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            filterArticles();
+            input.focus();
+        }
+
+        // Accordion Toggle function
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            const isOpen = content.classList.contains('active');
+
+            // Close all open accordions for clean UX
+            document.querySelectorAll('.accordion-content').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.fa-chevron-down').forEach(i => {
+                i.style.transform = 'rotate(0deg)';
+            });
+
+            // Toggle current accordion
+            if (!isOpen) {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body>
+</html>
