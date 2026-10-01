@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний и Поддержка Radmin VPN</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0b0f17',
+                            card: '#161f2c',
+                            cardHover: '#1e2a3b',
+                            border: '#2a384c',
+                            cyan: '#00d2ff',
+                            blue: '#0088ff',
+                            cyanGlow: 'rgba(0, 210, 255, 0.15)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f17;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .cyan-glow {
+            box-shadow: 0 0 25px -5px rgba(0, 210, 255, 0.25);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #00d2ff 0%, #0088ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-cyan selection:text-black">
+
+    <header class="sticky top-0 z-50 bg-brand-dark/90 backdrop-blur-md border-b border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-brand-cyan flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-brand-cyan/20">
+                    <i class="fa-solid font-bold fa-network-wired text-white"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight text-white">Radmin VPN</span>
+                    <span class="text-xs text-brand-cyan font-medium block -mt-1">Центр поддержки</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#popular" class="hover:text-brand-cyan transition">Популярные решения</a>
+                <a href="#categories" class="hover:text-brand-cyan transition">Категории базы знаний</a>
+                <a href="#troubleshooting" class="hover:text-brand-cyan transition">Диагностика</a>
+                <a href="#faq" class="hover:text-brand-cyan transition">FAQ</a>
+            </nav>
+
+            <a href="https://www.radmin-vpn.com" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-semibold hover:opacity-90 transition shadow-lg shadow-brand-cyan/20 flex items-center gap-2">
+                <i class="fa-solid fa-download text-sm"></i>
+                <span>Скачать</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="relative py-16 lg:py-24 overflow-hidden border-b border-brand-border/40">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-cyan/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+            <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-xs font-semibold text-brand-cyan mb-6">
+                    <span class="flex h-2 w-2 rounded-full bg-brand-cyan animate-ping"></span>
+                    Справочная система и инструкции
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
+                    Справка и Поддержка <span class="text-gradient">Radmin VPN</span>
+                </h1>
+
+                <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Быстрая помощь по созданию сетей, решению проблем с пингом, соединением P2P и настройке игр.
+                </p>
+
+                <!-- Search Input Box -->
+                <div class="relative max-w-2xl mx-auto mb-6">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-5 text-gray-400 text-lg"></i>
+                        <input type="text" id="searchInput" onkeyup="filterArticles()" 
+                            placeholder="Введите ваш вопрос (например: 'Minecraft', 'Желтый круг', 'Брандмауэр')..."
+                            class="w-full pl-14 pr-12 py-4 rounded-2xl bg-brand-card border border-brand-border text-white placeholder-gray-500 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition shadow-2xl text-base">
+                        <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-4 text-gray-400 hover:text-white p-2">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2 text-xs text-gray-400">
+                    <span class="font-medium text-gray-500">Популярные запросы:</span>
+                    <button onclick="setSearch('Создание сети')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Создание сети</button>
+                    <button onclick="setSearch('Желтый')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Желтый круг</button>
+                    <button onclick="setSearch('Minecraft')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Minecraft</button>
+                    <button onclick="setSearch('Брандмауэр')" class="bg-brand-card/80 hover:bg-brand-border px-2.5 py-1 rounded-md border border-brand-border/50 transition">Брандмауэр</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="popular" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Популярные статьи и решение проблем</h2>
+                    <p class="text-gray-400 text-sm mt-1">Ответы на самые частые вопросы и основные инструкции</p>
+                </div>
+                <span id="resultsCount" class="hidden text-xs bg-brand-card px-3 py-1.5 rounded-full border border-brand-border text-brand-cyan font-mono"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="popularGrid">
+                
+                <!-- arc1.html -->
+                <a href="arc1.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="создать сеть пригласить друзей пароль имя комната хост">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-brand-cyan flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-plus-node"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc1.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Как создать сеть и пригласить друзей</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Инструкция по созданию новой приватной сети, установке пароля и передаче данных для подключения.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+                <!-- arc2.html -->
+                <a href="arc2.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="подключиться к сети войти имя пароль приглашение">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc2.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Как подключиться к существующей сети</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Пошаговый процесс подключения к частной или публичной игровой сети в Radmin VPN.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+                <!-- arc3.html -->
+                <a href="arc3.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="ошибка не удается подключиться к серверу сбой связи offline служба">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc3.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Ошибка "Не удается подключиться к серверу"</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Диагностика и устранение проблем при запуске программы и сбое подключения к серверам Radmin.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+                <!-- arc4.html -->
+                <a href="arc4.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="желтый круг серый круг статус косвенное соединение p2p пинг ретранслятор">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-circle-dot"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc4.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Желтый / Серый круг возле имени игрока</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Как сменить косвенное подключение (Relaying) на прямое P2P соединение и снизить задержку.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+                <!-- arc5.html -->
+                <a href="arc5.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="брандмауэр антивирус фаервол правила исключения windows defender порт блокировка">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc5.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Настройка брандмауэра и антивируса</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Инструкция по правильному добавлению Radmin VPN и сетевых игр в список исключений фаервола.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+                <!-- arc6.html -->
+                <a href="arc6.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group block" data-keywords="не видно локальный сервер minecraft terraria palworld мультиплеер мир игра поиск">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-5 text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider block mb-1">Статья arc6.html</span>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition">Не видно локальный сервер в играх</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Решение проблем с поиском локальных серверов в Minecraft, Terraria, Stardew Valley и др.
+                    </p>
+                    <div class="text-brand-cyan text-sm font-semibold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                        Читать статью <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <section id="categories" class="py-16 bg-brand-card/20 border-t border-brand-border/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 text-center lg:text-left">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">База знаний по категориям</h2>
+                    <p class="text-gray-400 text-sm mt-1">Дополнительные руководства, продвинутая настройка и системные темы</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- arc7.html -->
+                    <a href="arc7.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="установка первый запуск скачать системные требования windows">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-download text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc7.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Установка и первый запуск</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Системные требования, порядок чистовой установки и первичная регистрация сетевого адаптера.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- arc8.html -->
+                    <a href="arc8.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="удаленный доступ radmin server viewer управление пк рабочий стол">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-desktop text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc8.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Удаленный доступ и Radmin Server</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Связка Radmin VPN с Radmin Viewer/Server для безопасного управления рабочим столом.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- arc9.html -->
+                    <a href="arc9.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="изменение ip адрес виртуальный адаптер 26.0.0.0 метрика приоритет">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-sliders text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc9.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Изменение IP и адаптера</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Настройка приоритета сетевой карты (метрики), замена IP-подсети и сброс сетевого стека.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- arc10.html -->
+                    <a href="arc10.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="настройка прямого соединения p2p direct connection nat проброс портов">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-bolt text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc10.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Прямое P2P соединение</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Технические подробности и оптимизация прохождения NAT для достижения туннельного соединения.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- arc11.html -->
+                    <a href="arc11.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="повысить скорость снизить пинг лаги фризы задержка канал">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-gauge-high text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc11.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Как повысить скорость и снизить пинг</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Практические советы по устранению задержек, фризов и оптимизации интернет-канала.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- arc12.html -->
+                    <a href="arc12.html" class="topic-card bg-brand-card border border-brand-border hover:border-brand-cyan/60 rounded-2xl p-6 transition group block" data-keywords="перенос настроек восстановление сетей резервная копия экспорт импорт">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-box-archive text-brand-cyan"></i>
+                            <span class="text-xs font-mono text-gray-400">arc12.html</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-brand-cyan transition mb-2">Перенос настроек и сетей</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Сохранение и перенос созданных комнат и администраторских прав при переустановке Windows.
+                        </p>
+                        <span class="text-xs text-brand-cyan font-semibold flex items-center gap-1">Открыть руководство <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="troubleshooting" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-white tracking-tight">Быстрая самодиагностика</h2>
+                <p class="text-gray-400 text-sm mt-2">Выполните 4 основных шага при возникновении любых проблем</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl font-extrabold text-brand-cyan/40">01</span>
+                            <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-power-off"></i></span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Статус сети</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Проверьте, что кнопка включения горит зеленым и ваш IP указан в формате <code class="text-brand-cyan">26.x.x.x</code>.
+                        </p>
+                    </div>
+                    <a href="arc1.html" class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-brand-cyan hover:underline">Подробнее в arc1.html &rarr;</a>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl font-extrabold text-brand-cyan/40">02</span>
+                            <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-rotate-right"></i></span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Служба Radmin</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Перезапустите службу <code class="text-brand-cyan">Radmin VPN Service</code> через Диспетчер задач.
+                        </p>
+                    </div>
+                    <a href="arc3.html" class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-brand-cyan hover:underline">Подробнее в arc3.html &rarr;</a>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl font-extrabold text-brand-cyan/40">03</span>
+                            <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-shield-cat"></i></span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Брандмауэр</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Добавьте исполняемые файлы игры и Radmin VPN в список разрешенных приложений.
+                        </p>
+                    </div>
+                    <a href="arc5.html" class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-brand-cyan hover:underline">Подробнее в arc5.html &rarr;</a>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl font-extrabold text-brand-cyan/40">04</span>
+                            <span class="p-2 rounded-lg bg-brand-border/40 text-brand-cyan text-sm"><i class="fa-solid fa-terminal"></i></span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Проверка Пинга</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Кликните правой кнопкой на друга в списке и запустите команду пинга для теста соединения.
+                        </p>
+                    </div>
+                    <a href="arc4.html" class="mt-4 pt-4 border-t border-brand-border/40 text-xs text-brand-cyan hover:underline">Подробнее в arc4.html &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-brand-border/40">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white tracking-tight">Часто задаваемые вопросы (FAQ)</h2>
+                <p class="text-gray-400 text-sm mt-2">Краткие ответы со ссылками на полные статьи</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Как правильно создать сеть для игры с друзьями?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Нажмите "Сеть" -> "Создать новую сеть", задайте имя и пароль. Подробная пошаговая инструкция доступна в <a href="arc1.html" class="text-brand-cyan underline">статье arc1.html</a>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Что делать при желтом значке напротив имени?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Это означает косвенное подключение. Чтобы настроить прямое P2P соединение, прочитайте <a href="arc4.html" class="text-brand-cyan underline">статью arc4.html</a> и <a href="arc10.html" class="text-brand-cyan underline">статью arc10.html</a>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-brand-border rounded-2xl bg-brand-card overflow-hidden">
+                    <button onclick="toggleAccordion(this)" class="w-full text-left px-6 py-5 flex items-center justify-between text-white font-medium hover:text-brand-cyan transition">
+                        <span class="text-base sm:text-lg font-semibold">Друзья не видят сервер Minecraft / Terraria / Palworld?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-cyan text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-gray-400 text-sm leading-relaxed">
+                        <div class="pb-6 pt-2 border-t border-brand-border/40">
+                            Обычно это связано с защитой Windows. О том, как добавить игру в исключения и подключиться по прямым IP адресам, читайте в <a href="arc6.html" class="text-brand-cyan underline">статье arc6.html</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-brand-dark border-t border-brand-border/50 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 flex items-center justify-center text-brand-cyan font-bold text-sm">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-white">Radmin VPN Справка</span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+                    <a href="arc1.html" class="hover:text-brand-cyan transition">arc1</a>
+                    <a href="arc2.html" class="hover:text-brand-cyan transition">arc2</a>
+                    <a href="arc3.html" class="hover:text-brand-cyan transition">arc3</a>
+                    <a href="arc4.html" class="hover:text-brand-cyan transition">arc4</a>
+                    <a href="arc5.html" class="hover:text-brand-cyan transition">arc5</a>
+                    <a href="arc6.html" class="hover:text-brand-cyan transition">arc6</a>
+                    <a href="arc7.html" class="hover:text-brand-cyan transition">arc7</a>
+                    <a href="arc8.html" class="hover:text-brand-cyan transition">arc8</a>
+                    <a href="arc9.html" class="hover:text-brand-cyan transition">arc9</a>
+                    <a href="arc10.html" class="hover:text-brand-cyan transition">arc10</a>
+                    <a href="arc11.html" class="hover:text-brand-cyan transition">arc11</a>
+                    <a href="arc12.html" class="hover:text-brand-cyan transition">arc12</a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-brand-border/30 text-center text-xs text-gray-600">
+                &copy; 2026 Справочная база знаний Radmin VPN. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function filterArticles() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.topic-card');
+            const clearBtn = document.getElementById('clearSearch');
+            const resultsCount = document.getElementById('resultsCount');
+
+            let visibleCount = 0;
+
+            if (filter.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-keywords') ? card.getAttribute('data-keywords').toLowerCase() : '';
+                const title = card.querySelector('h3, h4') ? card.querySelector('h3, h4').textContent.toLowerCase() : '';
+                const desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+
+                if (keywords.includes(filter) || title.includes(filter) || desc.includes(filter)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (filter !== '') {
+                resultsCount.classList.remove('hidden');
+                resultsCount.textContent = `Найдено статей: ${visibleCount}`;
+            } else {
+                resultsCount.classList.add('hidden');
+            }
+        }
+
+        function setSearch(keyword) {
+            const input = document.getElementById('searchInput');
+            input.value = keyword;
+            filterArticles();
+            input.focus();
+        }
+
+        function clearSearchInput() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            filterArticles();
+            input.focus();
+        }
+
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            const isOpen = content.classList.contains('active');
+
+            document.querySelectorAll('.accordion-content').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.fa-chevron-down').forEach(i => {
+                i.style.transform = 'rotate(0deg)';
+            });
+
+            if (!isOpen) {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body>
+</html>
